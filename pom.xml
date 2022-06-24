@@ -36,6 +36,11 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
         <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-boot-starter</artifactId>
+            <version>3.0.0</version>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
         </dependency>
@@ -62,11 +67,6 @@
         </dependency>
         <dependency>
             <groupId>io.springfox</groupId>
-            <artifactId>springfox-boot-starter</artifactId>
-            <version>3.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger-ui</artifactId>
             <version>3.0.0</version>
         </dependency>
@@ -74,6 +74,11 @@
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
             <version>1.5.1.Final</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+            <version>2.6.4</version>
         </dependency>
     </dependencies>
     <dependencyManagement>
@@ -123,11 +128,6 @@
                             <artifactId>lombok-mapstruct-binding</artifactId>
                             <version>0.2.0</version>
                         </dependency>
-                        <compilerArgs>
-                            <compilerArg>
-                                -Amapstruct.defaultComponentModel=spring
-                            </compilerArg>
-                        </compilerArgs>
                     </annotationProcessorPaths>
                 </configuration>
             </plugin>
@@ -153,14 +153,28 @@
                     </execution>
                     <execution>
                         <id>report</id>
-                        <phase>verify</phase>
+                        <phase>test</phase>
                         <goals>
                             <goal>report</goal>
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <excludes>
+                        <exclude>**/entities/*</exclude>
+                        <exclude>**/*Dto*</exclude>
+                        <exclude>**/enums/*</exclude>
+                        <exclude>**/exceptions/*</exclude>
+                        <exclude>**/configs/*</exclude>
+                        <exclude>**/filters/*</exclude>
+                        <exclude>**/*Impl_*</exclude>
+                        <exclude>**/*MapperImpl*</exclude>
+                        <exclude>**/*Mapper.*</exclude>
+                    </excludes>
+                </configuration>
             </plugin>
         </plugins>
     </build>
+<!--zjqcosjyltlwuqlf-->
 
 </project>
