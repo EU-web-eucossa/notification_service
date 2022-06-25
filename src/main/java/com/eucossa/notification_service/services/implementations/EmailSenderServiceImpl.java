@@ -109,13 +109,14 @@ public class EmailSenderServiceImpl implements EmailSenderService {
 
             // set attachments when available
             List<MultipartFile> attachments = emailWithAttachmentDto.getAttachments();
-            attachments.forEach(attachment -> {
-                try {
-                    mimeMessageHelper.addAttachment(Objects.requireNonNull(attachment.getOriginalFilename()), new ByteArrayResource(attachment.getBytes()));
-                } catch (MessagingException | IOException e) {
-                    throw new RuntimeException(e);
-                }
-            });
+            if (attachments != null && attachments.size() > 0)
+                attachments.forEach(attachment -> {
+                    try {
+                        mimeMessageHelper.addAttachment(Objects.requireNonNull(attachment.getOriginalFilename()), new ByteArrayResource(attachment.getBytes()));
+                    } catch (MessagingException | IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
 
             // send the email
             javaMailSender.send(mimeMessage);
