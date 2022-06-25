@@ -69,7 +69,7 @@ class EmailControllerTest {
 
     @Test
     void sendEmail() throws Exception {
-        baseUrl.append("/simple-email");
+        baseUrl.append("/send/simple-email");
         given(emailSenderService.sendSimpleEmail(any(SimpleEmailDto.class))).willReturn(responseBody);
 
         String actualResponse = mockMvc.perform(post(baseUrl.toString())

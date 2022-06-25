@@ -162,7 +162,7 @@
                 <configuration>
                     <excludes>
                         <exclude>**/entities/*</exclude>
-                        <exclude>**/*Dto*</exclude>
+                        <exclude>**/dtos/*</exclude>
                         <exclude>**/enums/*</exclude>
                         <exclude>**/exceptions/*</exclude>
                         <exclude>**/configs/*</exclude>

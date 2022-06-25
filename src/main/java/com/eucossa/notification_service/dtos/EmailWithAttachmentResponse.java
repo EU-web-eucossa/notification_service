@@ -1,24 +1,27 @@
 package com.eucossa.notification_service.dtos;
 
+import com.eucossa.notification_service.enums.YesOrNo;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
 import javax.validation.constraints.Null;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author christopherochiengotieno@gmail.com
  * @version 1.0.0
- * @since Friday, 24/06/2022
+ * @since Saturday, 25/06/2022
  */
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@ApiModel(value = "Simple Email", description = "Simple Email Details")
-public class SimpleEmailDto {
+@ApiModel(value = "Email With Attachment Response", description = "Email with Attachments Response details")
+public class EmailWithAttachmentResponse {
 
     @Null
     @ApiModelProperty(name = "id", example = "1", notes = "Id of an email object.", accessMode = ApiModelProperty.AccessMode.READ_ONLY)
@@ -38,6 +41,12 @@ public class SimpleEmailDto {
 
     @ApiModelProperty(name = "message", example = "Dear xyz, ...", notes = "the body of the email.")
     private String message;
+
+    @ApiModelProperty(name = "attachments", notes = "The attachment files to be bundled within the email")
+    private List<String> attachments = new ArrayList<>();
+
+    @ApiModelProperty(name = "sendHtmlBody", example = "Y", notes = "Is the body made up of html?")
+    private YesOrNo sendHtmlBody;
 
     @ApiModelProperty(name = "version", example = "1", notes = "Record version to avoid stale records.")
     private Integer version;

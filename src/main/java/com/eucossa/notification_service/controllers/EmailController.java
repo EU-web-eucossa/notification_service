@@ -1,5 +1,7 @@
 package com.eucossa.notification_service.controllers;
 
+import com.eucossa.notification_service.dtos.EmailWithAttachmentDto;
+import com.eucossa.notification_service.dtos.EmailWithAttachmentResponse;
 import com.eucossa.notification_service.dtos.SimpleEmailDto;
 import com.eucossa.notification_service.services.interfaces.EmailSenderService;
 import io.swagger.annotations.ApiOperation;
@@ -29,7 +31,7 @@ public class EmailController {
 
     private final EmailSenderService emailSenderService;
 
-    @PostMapping(value = "/simple-email", consumes = "application/json", produces = "application/json")
+    @PostMapping(value = "/send/simple-email", consumes = "application/json", produces = "application/json")
     @ApiOperation(value = "This end point send a simple email.")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Email has been Successfully sent."),
@@ -43,5 +45,21 @@ public class EmailController {
         SimpleEmailDto sentEmail = emailSenderService.sendSimpleEmail(simpleEmailDto);
         String location = ServletUriComponentsBuilder.fromCurrentRequest().path("/" + sentEmail.getId()).toUriString();
         return ResponseEntity.created(URI.create(location)).body(sentEmail);
+    }
+
+    @PostMapping(value = "/send/email-with-attachment", consumes = "multipart/form-data", produces = "application/json")
+    @ApiOperation(value = "This end point send a an email that has attachments.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Email has been Successfully sent."),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 500, message = "Internal Server Error"),
+            @ApiResponse(code = 403, message = "Forbidden"),
+            @ApiResponse(code = 401, message = "Unauthorized"),
+            @ApiResponse(code = 404, message = "Resource Not Found"),
+    })
+    public ResponseEntity<EmailWithAttachmentResponse> sendEmailWithAttachment(EmailWithAttachmentDto simpleEmailDto) {
+        EmailWithAttachmentResponse emailWithAttachmentResponse = emailSenderService.sendEmailWithAttachments(simpleEmailDto);
+        String location = ServletUriComponentsBuilder.fromCurrentRequest().path("/" + emailWithAttachmentResponse.getId()).toUriString();
+        return ResponseEntity.created(URI.create(location)).body(emailWithAttachmentResponse);
     }
 }

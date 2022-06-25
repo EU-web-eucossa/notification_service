@@ -1,18 +1,31 @@
 package com.eucossa.notification_service.services.implementations;
 
+import com.eucossa.notification_service.dtos.EmailWithAttachmentDto;
+import com.eucossa.notification_service.dtos.EmailWithAttachmentResponse;
 import com.eucossa.notification_service.dtos.SimpleEmailDto;
+import com.eucossa.notification_service.entities.EmailWithAttachment;
 import com.eucossa.notification_service.entities.SimpleEmail;
 import com.eucossa.notification_service.exceptions.EmptyEmailRecipientAddressException;
+import com.eucossa.notification_service.mappers.EmailWithAttachmentMapper;
 import com.eucossa.notification_service.mappers.SimpleEmailMapper;
+import com.eucossa.notification_service.repositories.EmailWithAttachmentRepository;
 import com.eucossa.notification_service.repositories.SimpleEmailRepository;
 import com.eucossa.notification_service.services.interfaces.EmailSenderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * @author christopherochiengotieno@gmail.com
@@ -28,6 +41,8 @@ public class EmailSenderServiceImpl implements EmailSenderService {
     private final JavaMailSender javaMailSender;
     private final SimpleEmailRepository simpleEmailRepository;
     private final SimpleEmailMapper simpleEmailMapper;
+    private final EmailWithAttachmentRepository emailWithAttachmentRepository;
+    private final EmailWithAttachmentMapper emailWithAttachmentMapper;
 
     @Override
     public SimpleEmailDto sendSimpleEmail(SimpleEmailDto simpleEmailDto) {
@@ -47,6 +62,7 @@ public class EmailSenderServiceImpl implements EmailSenderService {
         if (bcc != null && bcc.length > 0)
             simpleMailMessage.setBcc(bcc);
 
+        simpleMailMessage.setSubject(simpleEmailDto.getSubject());
         simpleMailMessage.setText(simpleEmailDto.getMessage());
 
         // send
@@ -57,5 +73,61 @@ public class EmailSenderServiceImpl implements EmailSenderService {
         log.info("Persisting sent email.");
         SimpleEmail savedSimpleEmail = simpleEmailRepository.save(simpleEmailMapper.toEntity(simpleEmailDto));
         return simpleEmailMapper.toDto(savedSimpleEmail);
+    }
+
+    @Override
+    public EmailWithAttachmentResponse sendEmailWithAttachments(EmailWithAttachmentDto emailWithAttachmentDto) {
+        log.info("Sending email with attachment to: " + Arrays.toString(emailWithAttachmentDto.getEmailTo()));
+        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+        try {
+
+            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
+
+            // set to address when not null or empty
+            String[] to = emailWithAttachmentDto.getEmailTo();
+            if (to == null || to.length < 1)
+                throw new EmptyEmailRecipientAddressException("To address cannot be empty or null");
+            else
+                mimeMessageHelper.setTo(to);
+
+            // set cc address if not null or empty
+            String[] cc = emailWithAttachmentDto.getCc();
+            if (cc != null && cc.length > 0)
+                mimeMessageHelper.setCc(cc);
+
+
+            // set bcc address when not null or empty
+            String[] bcc = emailWithAttachmentDto.getBcc();
+            if (bcc != null && bcc.length > 0)
+                mimeMessageHelper.setBcc(bcc);
+
+            // set subject
+            mimeMessageHelper.setSubject(emailWithAttachmentDto.getSubject());
+
+            // set body
+            mimeMessageHelper.setText(emailWithAttachmentDto.getMessage(), true);
+
+            // set attachments when available
+            List<MultipartFile> attachments = emailWithAttachmentDto.getAttachments();
+            attachments.forEach(attachment -> {
+                try {
+                    mimeMessageHelper.addAttachment(Objects.requireNonNull(attachment.getOriginalFilename()), new ByteArrayResource(attachment.getBytes()));
+                } catch (MessagingException | IOException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+
+            // send the email
+            javaMailSender.send(mimeMessage);
+
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
+        }
+
+        // persist the delivered email
+        EmailWithAttachment emailWithAttachment = emailWithAttachmentMapper.toEntity(emailWithAttachmentDto);
+        EmailWithAttachment savedEmailWithAttachment = emailWithAttachmentRepository.save(emailWithAttachment);
+
+        return emailWithAttachmentMapper.toDto(savedEmailWithAttachment);
     }
 }

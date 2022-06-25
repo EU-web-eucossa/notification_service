@@ -7,6 +7,9 @@ import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 
+import static springfox.documentation.builders.RequestHandlerSelectors.any;
+import static springfox.documentation.builders.RequestHandlerSelectors.basePackage;
+
 /**
  * @author christopherochiengotieno@gmail.com
  * @version 1.0.0
@@ -19,7 +22,7 @@ public class SwaggerConfig {
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.any())
+                .apis(basePackage("com.eucossa.notification_service.controllers"))
                 .paths(PathSelectors.any())
                 .build();
     }
