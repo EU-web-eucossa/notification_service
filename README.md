@@ -97,11 +97,11 @@ Also, it listens to the following main Queues within a broker (RabbitMQ) to send
 - ACCOUNT_ACTIVATION_QUEUE
 
 ## screenshots
-#### sample Order Confirmation Notification
+#### 1. sample Order Confirmation Notification
 ![Order Confirmation notification from 2022-06-26 07-39-57](https://user-images.githubusercontent.com/35846675/175801824-c28f52f2-d896-495b-aaf7-b5b926f8214c.png)
 
 
-#### RabbitMQ Dashboard listing some of the queues
+#### 2. RabbitMQ Dashboard listing some of the queues
 ![RabbitMQ](https://user-images.githubusercontent.com/35846675/175801920-54f8219a-1c10-4312-b994-24a86f49b23d.png)
 
 
