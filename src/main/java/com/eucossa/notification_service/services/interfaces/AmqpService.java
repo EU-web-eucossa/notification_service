@@ -1,6 +1,6 @@
 package com.eucossa.notification_service.services.interfaces;
 
-import com.eucossa.notification_service.models.OrderFromOrderConfirmationQueue;
+import com.eucossa.notification_service.models.EmailObject;
 
 /**
  * @author christopherochiengotieno@gmail.com
@@ -12,9 +12,14 @@ public interface AmqpService {
     /**
      * This method listens for posted confirmed orders and notifies the clients
      *
-     * @param orderFromOrderConfirmationQueue - the posted confirmed order
+     * @param emailObject - the posted confirmed order email to be sent
      */
-    void listenToOrderConfirmationQueueAndSendNotification(OrderFromOrderConfirmationQueue orderFromOrderConfirmationQueue);
+    void listenToOrderConfirmationQueueAndSendNotification(EmailObject emailObject);
 
-    void sendSampleOrderConfirmationObject();
+    /**
+     * This method listens to posted email objects from the promotional notification queue
+     *
+     * @param emailObject - the posted email to be sent
+     */
+    void listenToPromotionalNotificationsQueue(EmailObject emailObject);
 }

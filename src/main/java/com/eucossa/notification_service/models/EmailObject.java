@@ -4,7 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -17,8 +19,12 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderFromOrderConfirmationQueue {
+public class EmailObject {
     private UUID id;
+    private String[] cc;
+    private String[] bcc;
     private String[] emailTo;
-    private String orderInHtmlFormat;
+    private String subject;
+    private String messageInHtml;
+    private List<MultipartFile> attachments;
 }

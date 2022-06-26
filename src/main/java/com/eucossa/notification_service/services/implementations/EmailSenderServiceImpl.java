@@ -13,6 +13,7 @@ import com.eucossa.notification_service.repositories.SimpleEmailRepository;
 import com.eucossa.notification_service.services.interfaces.EmailSenderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -23,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -43,6 +45,9 @@ public class EmailSenderServiceImpl implements EmailSenderService {
     private final SimpleEmailMapper simpleEmailMapper;
     private final EmailWithAttachmentRepository emailWithAttachmentRepository;
     private final EmailWithAttachmentMapper emailWithAttachmentMapper;
+
+    @Value(value = "${spring.mail.username}")
+    private String emailFrom;
 
     @Override
     public SimpleEmailDto sendSimpleEmail(SimpleEmailDto simpleEmailDto) {
@@ -101,6 +106,9 @@ public class EmailSenderServiceImpl implements EmailSenderService {
             if (bcc != null && bcc.length > 0)
                 mimeMessageHelper.setBcc(bcc);
 
+            // set from
+            mimeMessageHelper.setFrom(emailFrom, "EUCOSSA - ONLINE SHOP");
+
             // set subject
             mimeMessageHelper.setSubject(emailWithAttachmentDto.getSubject());
 
@@ -121,7 +129,7 @@ public class EmailSenderServiceImpl implements EmailSenderService {
             // send the email
             javaMailSender.send(mimeMessage);
 
-        } catch (MessagingException e) {
+        } catch (MessagingException | UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }
 

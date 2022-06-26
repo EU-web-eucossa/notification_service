@@ -39,3 +39,10 @@ eureka:
     registerWithEureka: false
     fetchRegistry: false
 
+# (minute) (hour) (day-of-month) (month) (day-of-week) (command)
+cron:
+  for:
+    promotional:
+      # send notification every 6:00am and 6:00pm on weekdays
+      notifications: 0 6,18 * * 1-5 ?
+
