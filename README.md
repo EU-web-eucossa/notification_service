@@ -40,6 +40,7 @@ RESPONSE BODY:
 ```
 ```json
 {
+  "id":2323,
   "emailTo": [
     "abc@xyz.com"
   ],
@@ -50,7 +51,8 @@ RESPONSE BODY:
     "abc@xyz.com"
   ],
   "subject": "Test subject",
-  "message": "This is email for two recipients"
+  "message": "This is email for two recipients",
+  "version":2
 }
 ```
 
@@ -71,6 +73,7 @@ RESPONSE BODY:
 ```
 ```json
 {
+  "id":234,
   "emailTo": [
     "abc@xyz.com"
   ],
@@ -84,7 +87,8 @@ RESPONSE BODY:
   "message": "This is email for two recipients",
   "attachments": [
     "file1.pdf", "file2.pdf"
-  ]
+  ],
+  "version":3
 }
 ```
 Also, it listens to the following main Queues within a broker (RabbitMQ) to send notification
