@@ -3,6 +3,7 @@ package com.eucossa.notification_service.mappers;
 import com.eucossa.notification_service.dtos.EmailWithAttachmentDto;
 import com.eucossa.notification_service.dtos.EmailWithAttachmentResponse;
 import com.eucossa.notification_service.entities.EmailWithAttachment;
+import com.eucossa.notification_service.models.EmailObjectFromBroker;
 import org.mapstruct.DecoratedWith;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -48,4 +49,12 @@ public interface EmailWithAttachmentMapper {
             @Mapping(target = "attachments", ignore = true),
     })
     EmailWithAttachmentResponse toDto(EmailWithAttachment emailWithAttachment);
+
+    @Mappings(value = {
+            @Mapping(target = "emailTo", ignore = true),
+            @Mapping(target = "cc", ignore = true),
+            @Mapping(target = "bcc", ignore = true),
+            @Mapping(target = "attachments", ignore = true),
+    })
+    EmailWithAttachment emailDtoFromBrokerToEntity(EmailObjectFromBroker emailObjectFromBroker);
 }

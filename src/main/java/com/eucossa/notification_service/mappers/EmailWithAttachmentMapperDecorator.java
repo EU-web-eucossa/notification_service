@@ -4,6 +4,7 @@ import com.eucossa.notification_service.dtos.EmailWithAttachmentDto;
 import com.eucossa.notification_service.dtos.EmailWithAttachmentResponse;
 import com.eucossa.notification_service.entities.EmailAttachment;
 import com.eucossa.notification_service.entities.EmailWithAttachment;
+import com.eucossa.notification_service.models.EmailObjectFromBroker;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -27,7 +28,7 @@ public class EmailWithAttachmentMapperDecorator implements EmailWithAttachmentMa
     @Override
     public EmailWithAttachment toEntity(EmailWithAttachmentDto emailWithAttachmentDto) {
         EmailWithAttachment mappedEmailWithAttachment = emailWithAttachmentMapper.toEntity(emailWithAttachmentDto);
-        
+
         // set to
         String[] to = emailWithAttachmentDto.getEmailTo();
         if (to != null && to.length > 0) {
@@ -68,7 +69,7 @@ public class EmailWithAttachmentMapperDecorator implements EmailWithAttachmentMa
 
             attachments.forEach(attachment -> {
             try {
-                emailAttachments.add(EmailAttachment.builder().fileName(attachment.getOriginalFilename()).content(attachment.getBytes()).build());
+                emailAttachments.add(EmailAttachment.builder().originalFileName(attachment.getOriginalFilename()).contentInBytes(attachment.getBytes()).build());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -98,10 +99,58 @@ public class EmailWithAttachmentMapperDecorator implements EmailWithAttachmentMa
 
         List<EmailAttachment> attachments = emailWithAttachment.getAttachments();
         List<String> emailAttachments = new ArrayList<>();
-        if (attachments != null && attachments.size() != 0){
-            attachments.forEach(emailAttachment -> emailAttachments.add(emailAttachment.getFileName()));
+        if (attachments != null && attachments.size() != 0) {
+            attachments.forEach(emailAttachment -> emailAttachments.add(emailAttachment.getOriginalFileName()));
             mappedEmailWithAttachmentDto.setAttachments(emailAttachments);
         }
         return mappedEmailWithAttachmentDto;
+    }
+
+    @Override
+    public EmailWithAttachment emailDtoFromBrokerToEntity(EmailObjectFromBroker emailObjectFromBroker) {
+        EmailWithAttachment mappedEmailWithAttachment = emailWithAttachmentMapper.emailDtoFromBrokerToEntity(emailObjectFromBroker);
+
+        // set to
+        String[] to = emailObjectFromBroker.getEmailTo();
+        if (to != null && to.length > 0) {
+            StringBuilder string = new StringBuilder();
+            for (String toAddress :
+                    to) {
+                string.append(toAddress).append(",");
+            }
+            mappedEmailWithAttachment.setEmailTo(string.substring(0, string.length() - 1));
+        }
+
+        // set cc
+        String[] cc = emailObjectFromBroker.getCc();
+        if (cc != null && cc.length > 0) {
+            StringBuilder string = new StringBuilder();
+            for (String toAddress :
+                    cc) {
+                string.append(toAddress).append(",");
+            }
+            mappedEmailWithAttachment.setCc(string.substring(0, string.length() - 1));
+        }
+
+        // set bcc
+        String[] bcc = emailObjectFromBroker.getBcc();
+        if (bcc != null && bcc.length > 0) {
+            StringBuilder string = new StringBuilder();
+            for (String toAddress :
+                    bcc) {
+                string.append(toAddress).append(",");
+            }
+            mappedEmailWithAttachment.setBcc(string.substring(0, string.length() - 1));
+        }
+
+        // set attachments
+        List<EmailAttachment> attachments = emailObjectFromBroker.getAttachments();
+        if (attachments != null && attachments.size() != 0) {
+            List<EmailAttachment> emailAttachments = new ArrayList<>();
+
+            attachments.forEach(attachment -> emailAttachments.add(EmailAttachment.builder().originalFileName(attachment.getOriginalFileName()).contentInBytes(attachment.getContentInBytes()).build()));
+            mappedEmailWithAttachment.setAttachments(emailAttachments);
+        }
+        return mappedEmailWithAttachment;
     }
 }

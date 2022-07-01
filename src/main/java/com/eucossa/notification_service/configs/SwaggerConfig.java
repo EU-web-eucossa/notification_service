@@ -2,11 +2,14 @@ package com.eucossa.notification_service.configs;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
+import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.service.ApiInfo;
+import springfox.documentation.service.Contact;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 
-import static springfox.documentation.builders.RequestHandlerSelectors.basePackage;
 
 /**
  * @author christopherochiengotieno@gmail.com
@@ -20,8 +23,17 @@ public class SwaggerConfig {
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(basePackage("com.eucossa.notification_service.controllers"))
+                .apis(RequestHandlerSelectors.basePackage("com.eucossa.notification_service"))
                 .paths(PathSelectors.any())
+                .build().apiInfo(getApiInfo());
+    }
+
+    private ApiInfo getApiInfo() {
+        return new ApiInfoBuilder()
+                .title("Notification Service")
+                .description("")
+                .version("")
+                .contact(new Contact("Christopher Ochieng", "https://github.com/otienochris", "christopherochiengotieno@gmail.com"))
                 .build();
     }
 }

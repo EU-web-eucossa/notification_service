@@ -4,7 +4,6 @@ import com.eucossa.notification_service.dtos.EmailWithAttachmentDto;
 import com.eucossa.notification_service.dtos.EmailWithAttachmentResponse;
 import com.eucossa.notification_service.entities.EmailAttachment;
 import com.eucossa.notification_service.entities.EmailWithAttachment;
-import com.eucossa.notification_service.enums.YesOrNo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -64,7 +63,7 @@ class EmailWithAttachmentMapperDecoratorTest {
         MultipartFile multipartAttachmentFile1 = new MockMultipartFile(fileName1, fileName1, null, content1.getBytes());
         MultipartFile multipartAttachmentFile2 = new MockMultipartFile(fileName2, fileName2, null, content2.getBytes());
 
-        attachmentFileNames.addAll(List.of(emailAttachment1.getFileName(), emailAttachment2.getFileName()));
+        attachmentFileNames.addAll(List.of(emailAttachment1.getOriginalFileName(), emailAttachment2.getOriginalFileName()));
         emailAttachmentObjects.addAll(List.of(emailAttachment1, emailAttachment2));
         multipartAttachments.addAll(List.of(multipartAttachmentFile1, multipartAttachmentFile2));
 

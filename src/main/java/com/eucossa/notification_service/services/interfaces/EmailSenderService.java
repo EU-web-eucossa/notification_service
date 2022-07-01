@@ -3,6 +3,7 @@ package com.eucossa.notification_service.services.interfaces;
 import com.eucossa.notification_service.dtos.EmailWithAttachmentDto;
 import com.eucossa.notification_service.dtos.EmailWithAttachmentResponse;
 import com.eucossa.notification_service.dtos.SimpleEmailDto;
+import com.eucossa.notification_service.models.EmailObjectFromBroker;
 
 /**
  * @author christopherochiengotieno@gmail.com
@@ -26,4 +27,12 @@ public interface EmailSenderService {
      * @return the delivered and persisted email object
      */
     EmailWithAttachmentResponse sendEmailWithAttachments(EmailWithAttachmentDto emailWithAttachmentDto);
+
+    /**
+     * This method sends an email from the broker
+     *
+     * @param emailObjectFromBroker - the email object having standard email details as subject, attachments and recipients
+     * @return the delivered and persisted email object
+     */
+    EmailWithAttachmentResponse sendEmailWithAttachmentsFromBroker(EmailObjectFromBroker emailObjectFromBroker);
 }

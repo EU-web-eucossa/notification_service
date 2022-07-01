@@ -16,14 +16,14 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class AmqpConfig {
-    public final static String ORDER_CONFIRMATION_QUEUE = "ORDER_CONFIRMATION_QUEUE";
+    public final static String NOTIFICATION_QUEUE = "NOTIFICATION_QUEUE";
     public final static String PROMOTIONAL_NOTIFICATION_QUEUE = "PROMOTIONAL_NOTIFICATION_QUEUE";
     public final static String EUCOSSA_MESSAGE_EXCHANGE = "EUCOSSA_MESSAGE_EXCHANGE";
     public final static String ROUTING_KEY = "ROUTING_KEY";
 
     @Bean
-    public Queue orderConfirmationQueue() {
-        return new Queue(ORDER_CONFIRMATION_QUEUE);
+    public Queue notificationQueue() {
+        return new Queue(NOTIFICATION_QUEUE);
     }
 
     @Bean
@@ -37,7 +37,7 @@ public class AmqpConfig {
     }
 
     @Bean
-    public Binding orderConfirmationQueueBinding(@Qualifier("orderConfirmationQueue") Queue queue, TopicExchange exchange) {
+    public Binding notificationQueueBinding(@Qualifier("notificationQueue") Queue queue, TopicExchange exchange) {
         return BindingBuilder.bind(queue).to(exchange).with(ROUTING_KEY);
     }
 
