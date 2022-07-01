@@ -48,6 +48,9 @@ public class EmailSenderServiceImpl implements EmailSenderService {
     private final EmailWithAttachmentRepository emailWithAttachmentRepository;
     private final EmailWithAttachmentMapper emailWithAttachmentMapper;
 
+    private final String MANUAL_EMAIL_FROM = "emailsenderservicewithspring@gmail.com";
+
+
     @Value(value = "${spring.mail.username}")
     private String emailFrom;
 
@@ -169,7 +172,11 @@ public class EmailSenderServiceImpl implements EmailSenderService {
             mimeMessageHelper.setBcc(bcc);
 
         // set from
-        mimeMessageHelper.setFrom(emailFrom, "EUCOSSA - ONLINE SHOP");
+        if (emailFrom != null)
+            mimeMessageHelper.setFrom(emailFrom, "EUCOSSA - ONLINE SHOP");
+        else {
+            mimeMessageHelper.setFrom(MANUAL_EMAIL_FROM, "EUCOSSA - ONLINE SHOP");
+        }
 
         // set subject
         mimeMessageHelper.setSubject(emailObject3);

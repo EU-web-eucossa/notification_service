@@ -77,8 +77,8 @@ class EmailSenderServiceImplTest {
         MultipartFile attachment1 = new MockMultipartFile(fileName1, fileName1, null, content1.getBytes());
         MultipartFile attachment2 = new MockMultipartFile(fileName2, fileName2, null, content2.getBytes());
 
-        EmailAttachment emailAttachment1 = EmailAttachment.builder().fileName(fileName1).content(content1.getBytes()).build();
-        EmailAttachment emailAttachment2 = EmailAttachment.builder().fileName(fileName2).content(content2.getBytes()).build();
+        EmailAttachment emailAttachment1 = EmailAttachment.builder().originalFileName(fileName1).contentInBytes(content1.getBytes()).build();
+        EmailAttachment emailAttachment2 = EmailAttachment.builder().originalFileName(fileName2).contentInBytes(content2.getBytes()).build();
 
         multipartAttachments.addAll(List.of(attachment1, attachment2));
         attachmentFileNames.addAll(List.of(fileName1, fileName2));
