@@ -59,6 +59,6 @@ public class EmailController {
     public ResponseEntity<EmailWithAttachmentResponse> sendEmailWithAttachment(EmailWithAttachmentDto simpleEmailDto) {
         EmailWithAttachmentResponse emailWithAttachmentResponse = emailSenderService.sendEmailWithAttachments(simpleEmailDto);
         String location = ServletUriComponentsBuilder.fromCurrentRequest().path("/" + emailWithAttachmentResponse.getId()).toUriString();
-        return ResponseEntity.created(URI.create(location)).body(emailWithAttachmentResponse);
+        return ResponseEntity.created(URI.create(location)).header("Access-Control-Allow-Origin", "*").body(emailWithAttachmentResponse);
     }
 }
