@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notification-service
+  namespace: default
+  labels:
+    app: notification-service
+spec:
+  selector:
+    matchLabels:
+      app: notification-service
+  replicas: 1
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: notification-service
+    spec:
+      containers:
+        - name: notification-service
+          image: otienochristopher/notification_service:latest
+          env:
+            - name: EMAIL
+              value: 'emailsenderservicewithspring@gmail.com'
+            - name: PASSWORD
+              value: 'zjqcosjyltlwuqlf'
+            - name: RABBITMQ_HOST
+              value: '146.190.230.41'
+            - name: RABBITMQ_PORT
+              value: '5672'
+          ports:
+            - containerPort: 8080
+              # name: NOTIFICATION_SERVICE
+      restartPolicy: Always
