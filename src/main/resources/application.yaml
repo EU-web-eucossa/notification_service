@@ -5,12 +5,15 @@ spring:
     pathmatch:
       matching-strategy: ant_path_matcher
   h2:
-    console.enabled: true
+    console:
+      enabled: true
+      settings:
+        web-allow-others: true
   datasource:
     #    url: jdbc:h2:file:~/home/chris/dev/eucossa/notification_service/src/main/resources/data;DB_CLOSE_ON_EXIT=FALSE;AUTO_RECONNECT=TRUE;DB_CLOSE_DELAY=-1
     url: jdbc:h2:mem:test
-    username: sa
-    password: password
+    username: eucossa
+    password: eucossa
     driverClassName: org.h2.Driver
     jpa:
       hibernate:
